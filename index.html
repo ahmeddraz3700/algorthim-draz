@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>الخوارزميات — الرياضيات في حياتك اليومية | م. أحمد دراز</title>
+<meta name="description" content="منصة المهندس أحمد دراز التعليمية: فيديوهات، مذكرات، وأوراق عمل تربط الرياضيات بالحياة اليومية لطلاب المرحلتين الإعدادية والثانوية." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B1220'/%3E%3Cpolygon points='50,6 57.6,31.5 85.3,14.6 68.4,42.3 100,50 68.4,57.6 85.3,85.3 57.6,68.4 50,100 42.3,68.4 14.6,85.3 31.5,57.6 0,50 31.5,42.3 14.6,14.6 42.3,31.5' fill='%23C89A4B'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ============ Tokens ============ */
+  :root{
+    --bg:#F5EFE1;
+    --surface:#FFFDF8;
+    --surface-2:#EFE6CF;
+    --ink:#171F2B;
+    --muted:#5C6270;
+    --line:#DED2B0;
+    --brass:#A97B2E;
+    --brass-strong:#8C6423;
+    --brass-tint:#EFDBAA;
+    --teal:#2A6E63;
+    --teal-tint:#D9EAE5;
+    --shadow: 0 1px 2px rgba(23,31,43,.06), 0 12px 28px -12px rgba(23,31,43,.18);
+    --radius-cut: 14px;
+    --font-display:'Amiri', 'Traditional Arabic', serif;
+    --font-body:'IBM Plex Sans Arabic','Segoe UI',sans-serif;
+    --fs-hero: clamp(2.1rem, 1.35rem + 3.1vw, 3.8rem);
+    --fs-h2: clamp(1.55rem, 1.25rem + 1.3vw, 2.3rem);
+    --fs-h3: clamp(1.1rem, 1.0rem + 0.4vw, 1.3rem);
+    --fs-body: 1.05rem;
+    --fs-small: .92rem;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+
+  :root[data-theme="dark"]{
+    --bg:#0B1220;
+    --surface:#121B2C;
+    --surface-2:#182338;
+    --ink:#EFE7D6;
+    --muted:#9AA6BA;
+    --line:#233150;
+    --brass:#D9AE63;
+    --brass-strong:#EFC77D;
+    --brass-tint:#2B2312;
+    --teal:#6BC1B1;
+    --teal-tint:#0F2622;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 20px 40px -18px rgba(0,0,0,.55);
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1220;
+      --surface:#121B2C;
+      --surface-2:#182338;
+      --ink:#EFE7D6;
+      --muted:#9AA6BA;
+      --line:#233150;
+      --brass:#D9AE63;
+      --brass-strong:#EFC77D;
+      --brass-tint:#2B2312;
+      --teal:#6BC1B1;
+      --teal-tint:#0F2622;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 20px 40px -18px rgba(0,0,0,.55);
+    }
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:var(--fs-body);
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+    transition:background .3s var(--ease), color .3s var(--ease);
+  }
+
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  ::selection{background:var(--brass-tint); color:var(--ink);}
+
+  h1,h2,h3{
+    font-family:var(--font-display);
+    font-weight:700;
+    line-height:1.35;
+    margin:0;
+    text-wrap:balance;
+  }
+
+  p{margin:0;}
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:.5em;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:.85rem;
+    color:var(--brass-strong);
+    margin-bottom:.9rem;
+  }
+  .eyebrow::before{
+    content:"";
+    width:1.4em;height:1px;
+    background:var(--brass);
+    display:inline-block;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin-inline:auto;
+    padding-inline:clamp(1.25rem, 4vw, 3rem);
+  }
+
+  section{ padding-block: clamp(3.5rem, 8vw, 6.5rem); }
+
+  .lede{ max-width:42rem; color:var(--muted); font-size:1.05rem; }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  .skip-link{
+    position:absolute; right:1rem; top:-4rem;
+    background:var(--ink); color:var(--bg);
+    padding:.6rem 1rem; border-radius:6px; z-index:200;
+    transition:top .2s var(--ease);
+  }
+  .skip-link:focus{ top:1rem; }
+
+  /* ============ star mark ============ */
+  .mark{
+    --size:38px;
+    width:var(--size); height:var(--size);
+    flex:none;
+    background:linear-gradient(155deg, var(--brass-strong), var(--brass));
+    clip-path:polygon(50% 0%,57.6% 31.5%,85.3% 14.6%,68.4% 42.3%,100% 50%,68.4% 57.6%,85.3% 85.3%,57.6% 68.4%,50% 100%,42.3% 68.4%,14.6% 85.3%,31.5% 57.6%,0% 50%,31.5% 42.3%,14.6% 14.6%,42.3% 31.5%);
+  }
+
+  /* ============ header ============ */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-row{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:1.5rem; padding-block:.9rem;
+  }
+  .brand{ display:flex; align-items:center; gap:.7rem; text-decoration:none; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.15; }
+  .brand-text b{ font-family:var(--font-display); font-size:1.25rem; }
+  .brand-text span{ font-size:.74rem; color:var(--muted); font-family:var(--font-body); font-weight:500; }
+
+  nav.links{ display:flex; align-items:center; gap:clamp(1rem,2.5vw,2rem); }
+  nav.links a{
+    text-decoration:none; font-size:.95rem; color:var(--ink);
+    position:relative; padding-block:.2rem;
+  }
+  nav.links a::after{
+    content:""; position:absolute; inset-inline:0; bottom:-4px; height:2px;
+    background:var(--brass); transform:scaleX(0); transform-origin:right;
+    transition:transform .25s var(--ease);
+  }
+  nav.links a:hover::after{ transform:scaleX(1); }
+
+  .theme-toggle{
+    display:flex; align-items:center; justify-content:center;
+    width:38px; height:38px; border-radius:50%;
+    background:var(--surface-2); border:1px solid var(--line);
+    cursor:pointer; color:var(--ink);
+  }
+  .theme-toggle svg{ width:18px; height:18px; }
+
+  .nav-actions{ display:flex; align-items:center; gap:.9rem; }
+
+  /* ============ buttons ============ */
+  .btn{
+    display:inline-flex; align-items:center; gap:.5em;
+    padding:.85rem 1.5rem;
+    font-family:var(--font-body); font-weight:600; font-size:.95rem;
+    text-decoration:none; cursor:pointer; border:1px solid transparent;
+    clip-path:polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    transition:transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn-primary{ background:var(--brass); color:#221802; }
+  .btn-primary:hover{ box-shadow:0 10px 24px -10px color-mix(in srgb, var(--brass) 70%, transparent); }
+  .btn-ghost{ background:transparent; border-color:var(--line); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--brass); }
+
+  /* ============ hero ============ */
+  .hero{
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero .wrap{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:3rem; align-items:center;
+    padding-block:clamp(3rem,9vw,6rem);
+  }
+  .hero h1{ font-size:var(--fs-hero); }
+  .hero h1 em{ font-style:normal; color:var(--brass-strong); }
+  .hero .lede{ margin-block:1.4rem 2rem; font-size:1.08rem; }
+  .hero-actions{ display:flex; flex-wrap:wrap; gap:1rem; }
+
+  .hero-visual{
+    position:relative; aspect-ratio:3/2;
+    border:1px solid var(--line);
+    background:var(--surface);
+    overflow:hidden;
+    clip-path:polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px));
+  }
+  .hero-visual img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+  }
+
+  @media (max-width: 880px){
+    .hero .wrap{ grid-template-columns:1fr; }
+    .hero-visual{ order:-1; }
+    nav.links{ display:none; }
+  }
+
+  /* ============ about ============ */
+  .about-grid{
+    display:grid; grid-template-columns:.85fr 1.15fr; gap:3.5rem; align-items:start;
+  }
+  .about-card{
+    background:var(--surface); border:1px solid var(--line);
+    padding:2rem;
+    clip-path:polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    box-shadow:var(--shadow);
+  }
+  .about-card .mark{ margin-bottom:1.2rem; }
+  .role-line{ font-family:var(--font-body); font-weight:600; font-size:.85rem; color:var(--teal); margin-top:.4rem; }
+
+  .chips{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.6rem; }
+  .chip{
+    font-size:.82rem; padding:.45rem .9rem;
+    border:1px solid var(--line); background:var(--surface-2);
+    border-radius:100px; color:var(--muted);
+  }
+
+  @media (max-width: 880px){ .about-grid{ grid-template-columns:1fr; } }
+
+  /* ============ pillars ============ */
+  .pillars-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem;
+    margin-top:2.5rem;
+  }
+  .pillar{
+    background:var(--surface); border:1px solid var(--line);
+    padding:1.7rem 1.5rem;
+    clip-path:polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    transition:transform .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .pillar:hover{ transform:translateY(-4px); border-color:var(--brass); box-shadow:var(--shadow); }
+  .pillar .icon{
+    width:40px; height:40px; margin-bottom:1.1rem;
+    color:var(--teal);
+  }
+  .pillar h3{ margin-bottom:.5rem; }
+  .pillar p{ color:var(--muted); font-size:.94rem; }
+
+  @media (max-width: 980px){ .pillars-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width: 560px){ .pillars-grid{ grid-template-columns:1fr; } }
+
+  /* ============ everywhere strip ============ */
+  .everywhere{ background:var(--surface-2); border-block:1px solid var(--line); }
+  .tags-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-top:2.5rem; }
+  .tag-card{
+    background:var(--surface); border:1px solid var(--line);
+    padding:1.6rem;
+    border-inline-start:3px solid var(--brass);
+  }
+  .tag-card h3{ font-size:1.05rem; margin-bottom:.4rem; }
+  .tag-card p{ color:var(--muted); font-size:.92rem; }
+
+  @media (max-width: 780px){ .tags-row{ grid-template-columns:1fr; } }
+
+  /* ============ latest ============ */
+  .latest-note{ margin-top:1rem; }
+  .latest-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:2.5rem; }
+  .latest-card{
+    border:1px dashed var(--line);
+    background:var(--surface);
+    padding:1.6rem;
+    display:flex; flex-direction:column; gap:1rem; min-height:220px;
+  }
+  .latest-card .type{
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .latest-card .type b{ font-size:.9rem; }
+  .badge-soon{
+    font-family:var(--font-body); font-weight:600; font-size:.72rem;
+    color:var(--teal); background:var(--teal-tint);
+    padding:.3rem .6rem; border-radius:100px;
+  }
+  .latest-card .ph-icon{
+    width:100%; flex:1;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--line);
+  }
+  .latest-card .ph-icon svg{ width:34px; height:34px; }
+  .latest-card p{ color:var(--muted); font-size:.88rem; }
+
+  @media (max-width: 880px){ .latest-grid{ grid-template-columns:1fr; } }
+
+  /* ============ contact ============ */
+  .contact-box{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem;
+    background:var(--ink); color:var(--bg);
+    padding:clamp(2rem,5vw,3.2rem);
+    clip-path:polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 40px 100%, 0 calc(100% - 40px));
+  }
+  :root[data-theme="dark"] .contact-box{ background:var(--surface-2); border:1px solid var(--line); }
+  .contact-box h2{ color:inherit; }
+  .contact-box .lede{ color:color-mix(in srgb, var(--bg) 70%, transparent); }
+  :root[data-theme="dark"] .contact-box .lede{ color:var(--muted); }
+  .social-row{ display:flex; gap:.8rem; flex-wrap:wrap; }
+  .social-link{
+    display:flex; align-items:center; gap:.5em;
+    padding:.7rem 1.1rem; border:1px solid color-mix(in srgb, var(--bg) 30%, transparent);
+    text-decoration:none; font-size:.9rem;
+    border-radius:100px;
+  }
+  :root[data-theme="dark"] .social-link{ border-color:var(--line); }
+  .social-link svg{ width:16px; height:16px; }
+  .social-link:hover{ border-color:var(--brass); color:var(--brass-strong); }
+
+  /* ============ footer ============ */
+  footer{ border-top:1px solid var(--line); padding-block:2.5rem; }
+  .footer-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;
+  }
+  .footer-row .brand-text span{ margin-top:.2rem; }
+  footer .fine{ color:var(--muted); font-size:.82rem; }
+
+  /* ============ reveal ============ */
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s var(--ease), transform .6s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">تخطي إلى المحتوى</a>
+
+<header>
+  <div class="wrap nav-row">
+    <a class="brand" href="#home">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <b>الخوارزميات</b>
+        <span>مع م. أحمد دراز</span>
+      </span>
+    </a>
+    <nav class="links" aria-label="التنقل الرئيسي">
+      <a href="#home">الرئيسية</a>
+      <a href="#about">عن المستر</a>
+      <a href="#content">المحتوى</a>
+      <a href="#everywhere">الرياضيات في حياتك</a>
+      <a href="#contact">تواصل</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الليلي">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">منصّة لرَبط الرياضيات بالواقع</p>
+        <h1>الرياضيات هي <em>الخوارزمية</em><br>اللي بتشغّل حياتك</h1>
+        <p class="lede">مع المهندس أحمد دراز، هتشوف الرياضيات من زاوية تانية: مش مادة بتُحفظ، دي أداة بتفهم بيها العالم حواليك. فيديوهات ومذكرات وأوراق عمل لكل مراحل الإعدادي والثانوي.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#latest">شاهد الفيديوهات</a>
+          <a class="btn btn-ghost" href="#content">حمّل المذكرات</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/hero-scholars.jpg" alt="لوحة تجمع الخوارزمي مع أينشتاين ونيوتن وجاليليو وتسلا وعلماء آخرين حول طاولة مليئة بالمعادلات والأدوات الفلكية" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about">
+    <div class="wrap about-grid reveal">
+      <div class="about-card">
+        <span class="mark" aria-hidden="true"></span>
+        <h3>أحمد دراز</h3>
+        <p class="role-line">مهندس كهرباء — مدرس رياضيات</p>
+        <div class="chips">
+          <span class="chip">مهندس كهرباء</span>
+          <span class="chip">مدرس رياضيات — إعدادي وثانوي</span>
+          <span class="chip">صانع محتوى تعليمي</span>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow">مين المهندس أحمد دراز؟</p>
+        <h2>مهندس بيشرح المسائل زي ما بيشرح الدوائر الكهربائية</h2>
+        <p class="lede" style="margin-top:1.2rem;">شغلي إني أبسّط المعادلات والمسائل وأربطها بأمثلة من حياتنا اليومية — الهدف مش إنك تحفظ خطوات الحل، الهدف إنك تفهم ليه بنحلها كده، وتقدر تستخدم نفس الطريقة في أي مسألة تانية تقابلك.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTENT PILLARS ===== -->
+  <section id="content">
+    <div class="wrap reveal">
+      <p class="eyebrow">المحتوى</p>
+      <h2>هتلاقي في الموقع إيه؟</h2>
+      <div class="pillars-grid">
+        <div class="pillar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9.5"/><path d="M10 8.5l6 3.5-6 3.5v-7z" fill="currentColor" stroke="none"/></svg>
+          <h3>فيديوهات تعليمية</h3>
+          <p>شرح مبسّط لكل درس، بخطوات واضحة وأمثلة واقعية بدل الحفظ الجامد.</p>
+        </div>
+        <div class="pillar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2.5h9l4 4v15H6z"/><path d="M15 2.5v4h4M9 12h6M9 15.5h6M9 8.5h3"/></svg>
+          <h3>مذكرات وأوراق عمل</h3>
+          <p>ملازم ومراجعات لكل الصفوف، جاهزة للطباعة والتحميل من الموقع مباشرة.</p>
+        </div>
+        <div class="pillar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 17l5-6 4 4 8-9"/><path d="M15 6h5v5"/></svg>
+          <h3>الرياضيات في الحياة</h3>
+          <p>إزاي المعادلة اللي بتذاكرها بتفسّر حاجات بتشوفها كل يوم حواليك.</p>
+        </div>
+        <div class="pillar">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2.5a5.5 5.5 0 0 1 3 10.1c-.6.4-1 1-1 1.9v1H10v-1c0-.9-.4-1.5-1-1.9A5.5 5.5 0 0 1 12 2.5z"/><path d="M10 19h4M10.5 21.5h3"/></svg>
+          <h3>نصايح وأدوات مذاكرة</h3>
+          <p>طرق مذاكرة ومراجعة صح توفّرلك وقت ومجهود قبل الامتحان.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EVERYWHERE ===== -->
+  <section class="everywhere" id="everywhere">
+    <div class="wrap reveal">
+      <p class="eyebrow">أمثلة</p>
+      <h2>الرياضيات مش حبيسة الكرّاسة</h2>
+      <div class="tags-row">
+        <div class="tag-card">
+          <h3>الهندسة الكهربائية</h3>
+          <p>مقاومة، وتيار، وجهد — كل جهاز بتستخدمه شغّال بمعادلات رياضية بسيطة.</p>
+        </div>
+        <div class="tag-card">
+          <h3>الاقتصاد والفلوس</h3>
+          <p>فايدة، ونسبة خصم، وقرار شراء — كلها قرارات بتاخدها بالحساب من غير ما تحس.</p>
+        </div>
+        <div class="tag-card">
+          <h3>الطبيعة والأنماط</h3>
+          <p>تماثل، وتكرار، وأشكال هندسية موجودة في كل حاجة حواليك — من ورقة الشجر للخلية النحل.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LATEST / COMING SOON ===== -->
+  <section id="latest">
+    <div class="wrap reveal">
+      <p class="eyebrow">أحدث المحتوى</p>
+      <h2>المحتوى في الطريق</h2>
+      <p class="lede latest-note">أول دفعة فيديوهات ومذكرات هتتنزل هنا قريبًا. تابعنا عشان توصلك أول ما تطلع.</p>
+      <div class="latest-grid">
+        <div class="latest-card">
+          <div class="type"><b>فيديو</b><span class="badge-soon">قريبًا</span></div>
+          <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9.5"/><path d="M10 8.5l6 3.5-6 3.5v-7z"/></svg></div>
+          <p>أول فيديو هيربط بين درس من المنهج ومثال من حياتنا اليومية.</p>
+        </div>
+        <div class="latest-card">
+          <div class="type"><b>مذكرة</b><span class="badge-soon">قريبًا</span></div>
+          <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2.5h9l4 4v15H6z"/><path d="M15 2.5v4h4"/></svg></div>
+          <p>مذكرة مراجعة أول باب، جاهزة للتحميل والطباعة.</p>
+        </div>
+        <div class="latest-card">
+          <div class="type"><b>مقال</b><span class="badge-soon">قريبًا</span></div>
+          <div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h4"/></svg></div>
+          <p>مقال قصير عن استخدام عملي للرياضيات في مجال الهندسة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact">
+    <div class="wrap reveal">
+      <div class="contact-box">
+        <div>
+          <p class="eyebrow" style="color:var(--brass-strong);">تواصل</p>
+          <h2>تابعنا عشان يوصلك كل جديد</h2>
+          <p class="lede" style="margin-top:.8rem;">قنوات المتابعة والتواصل هتتحدّث هنا أول ما تكون جاهزة.</p>
+        </div>
+        <div class="social-row">
+          <a class="social-link" href="mailto:ahmeddraz3700@gmail.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="M3 6l9 7 9-7"/></svg>
+            البريد الإلكتروني
+          </a>
+          <a class="social-link" href="https://www.youtube.com/@ahmedabdelghaffardraz9850" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5.5" width="19" height="13" rx="3"/><path d="M10 9.5l5 2.5-5 2.5v-5z" fill="currentColor" stroke="none"/></svg>
+            يوتيوب
+          </a>
+          <a class="social-link" href="https://www.facebook.com/profile.php?id=100069049241840" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 3h-2.5A4.5 4.5 0 0 0 8 7.5V10H5.5v3.5H8V21h3.5v-7.5H14l1-3.5h-3.5V7.5c0-.6.4-1 1-1H15V3z"/></svg>
+            فيسبوك
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="brand" style="text-decoration:none;">
+      <span class="mark" aria-hidden="true" style="--size:28px;"></span>
+      <span class="brand-text">
+        <b style="font-size:1rem;">الخوارزميات</b>
+        <span>مهندس كهرباء ومدرس رياضيات</span>
+      </span>
+    </div>
+    <p class="fine">© 2026 الخوارزميات — جميع الحقوق محفوظة</p>
+  </div>
+</footer>
+
+<script>
+  // ---- theme toggle ----
+  (function(){
+    var root = document.documentElement;
+    var stored = localStorage.getItem('khw-theme');
+    if(stored){ root.setAttribute('data-theme', stored); }
+    var btn = document.getElementById('themeToggle');
+    function current(){
+      var attr = root.getAttribute('data-theme');
+      if(attr) return attr;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    btn.addEventListener('click', function(){
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('khw-theme', next);
+    });
+  })();
+
+  // ---- scroll reveal ----
+  (function(){
+    var items = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){
+      items.forEach(function(el){ el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: .15 });
+    items.forEach(function(el){ io.observe(el); });
+  })();
+
+</script>
+</body>
+</html>
