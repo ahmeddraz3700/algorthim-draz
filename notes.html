@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>المذكرات — الخوارزميات | م. أحمد دراز</title>
+<meta name="description" content="مذكرات وأوراق عمل جاهزة للتحميل من المهندس أحمد دراز." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B1220'/%3E%3Cpolygon points='50,6 57.6,31.5 85.3,14.6 68.4,42.3 100,50 68.4,57.6 85.3,85.3 57.6,68.4 50,100 42.3,68.4 14.6,85.3 31.5,57.6 0,50 31.5,42.3 14.6,14.6 42.3,31.5' fill='%23C89A4B'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F5EFE1; --surface:#FFFDF8; --surface-2:#EFE6CF;
+    --ink:#171F2B; --muted:#5C6270; --line:#DED2B0;
+    --brass:#A97B2E; --brass-strong:#8C6423; --brass-tint:#EFDBAA;
+    --teal:#2A6E63; --teal-tint:#D9EAE5;
+    --shadow: 0 1px 2px rgba(23,31,43,.06), 0 12px 28px -12px rgba(23,31,43,.18);
+    --font-display:'Amiri', 'Traditional Arabic', serif;
+    --font-body:'IBM Plex Sans Arabic','Segoe UI',sans-serif;
+    --fs-h2: clamp(1.55rem, 1.25rem + 1.3vw, 2.3rem);
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0B1220; --surface:#121B2C; --surface-2:#182338;
+    --ink:#EFE7D6; --muted:#9AA6BA; --line:#233150;
+    --brass:#D9AE63; --brass-strong:#EFC77D; --brass-tint:#2B2312;
+    --teal:#6BC1B1; --teal-tint:#0F2622;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 20px 40px -18px rgba(0,0,0,.55);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0B1220; --surface:#121B2C; --surface-2:#182338;
+      --ink:#EFE7D6; --muted:#9AA6BA; --line:#233150;
+      --brass:#D9AE63; --brass-strong:#EFC77D; --brass-tint:#2B2312;
+      --teal:#6BC1B1; --teal-tint:#0F2622;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 20px 40px -18px rgba(0,0,0,.55);
+    }
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--font-body); font-size:1.05rem; line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+    transition:background .3s var(--ease), color .3s var(--ease);
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  h1,h2{ font-family:var(--font-display); font-weight:700; line-height:1.35; margin:0; text-wrap:balance; }
+  p{margin:0;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:.5em;
+    font-family:var(--font-body); font-weight:600; font-size:.85rem;
+    color:var(--brass-strong); margin-bottom:.9rem;
+  }
+  .eyebrow::before{ content:""; width:1.4em;height:1px; background:var(--brass); display:inline-block; }
+  .wrap{ max-width:1180px; margin-inline:auto; padding-inline:clamp(1.25rem, 4vw, 3rem); }
+  section{ padding-block: clamp(3rem, 7vw, 5rem); }
+  .lede{ max-width:42rem; color:var(--muted); font-size:1.05rem; }
+
+  .mark{
+    --size:38px; width:var(--size); height:var(--size); flex:none;
+    background:linear-gradient(155deg, var(--brass-strong), var(--brass));
+    clip-path:polygon(50% 0%,57.6% 31.5%,85.3% 14.6%,68.4% 42.3%,100% 50%,68.4% 57.6%,85.3% 85.3%,57.6% 68.4%,50% 100%,42.3% 68.4%,14.6% 85.3%,31.5% 57.6%,0% 50%,31.5% 42.3%,14.6% 14.6%,42.3% 31.5%);
+  }
+
+  header{
+    position:sticky; top:0; z-index:100;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  }
+  .nav-row{ display:flex; align-items:center; justify-content:space-between; gap:1.5rem; padding-block:.9rem; }
+  .brand{ display:flex; align-items:center; gap:.7rem; text-decoration:none; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.15; }
+  .brand-text b{ font-family:var(--font-display); font-size:1.25rem; }
+  .brand-text span{ font-size:.74rem; color:var(--muted); font-weight:500; }
+  nav.links{ display:flex; align-items:center; gap:clamp(1rem,2.5vw,2rem); }
+  nav.links a{ text-decoration:none; font-size:.95rem; color:var(--ink); position:relative; padding-block:.2rem; }
+  nav.links a.active{ color:var(--brass-strong); }
+  nav.links a::after{
+    content:""; position:absolute; inset-inline:0; bottom:-4px; height:2px;
+    background:var(--brass); transform:scaleX(0); transform-origin:right; transition:transform .25s var(--ease);
+  }
+  nav.links a:hover::after, nav.links a.active::after{ transform:scaleX(1); }
+  .theme-toggle{
+    display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%;
+    background:var(--surface-2); border:1px solid var(--line); cursor:pointer; color:var(--ink);
+  }
+  .theme-toggle svg{ width:18px; height:18px; }
+  @media (max-width: 880px){ nav.links{ display:none; } }
+
+  .page-title{ border-bottom:1px solid var(--line); }
+  .page-title h1{ font-size:var(--fs-h2); }
+
+  .note-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; margin-top:2rem; }
+  @media (max-width: 980px){ .note-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width: 640px){ .note-grid{ grid-template-columns:1fr; } }
+  .note-card{
+    background:var(--surface); border:1px solid var(--line);
+    padding:1.5rem;
+    clip-path:polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    display:flex; flex-direction:column; gap:.9rem;
+  }
+  .note-card .icon{ color:var(--teal); width:34px; height:34px; }
+  .note-card h3{ font-family:var(--font-display); font-size:1.1rem; }
+  .note-card p{ color:var(--muted); font-size:.9rem; flex:1; }
+  .note-dl{
+    display:inline-flex; align-items:center; gap:.5em; align-self:flex-start;
+    padding:.6rem 1.1rem; border-radius:100px; font-size:.85rem; font-weight:600;
+    background:var(--brass); color:#221802; text-decoration:none;
+  }
+  .note-dl svg{ width:15px; height:15px; }
+
+  .empty-state{
+    text-align:center; padding:3rem 1rem; color:var(--muted);
+    border:1px dashed var(--line); margin-top:2rem;
+  }
+
+  footer{ border-top:1px solid var(--line); padding-block:2.5rem; }
+  .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+  footer .fine{ color:var(--muted); font-size:.82rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a class="brand" href="index.html">
+      <span class="mark" aria-hidden="true"></span>
+      <span class="brand-text">
+        <b>الخوارزميات</b>
+        <span>مع م. أحمد دراز</span>
+      </span>
+    </a>
+    <nav class="links" aria-label="التنقل الرئيسي">
+      <a href="index.html">الرئيسية</a>
+      <a href="videos.html">الفيديوهات</a>
+      <a href="notes.html" class="active">المذكرات</a>
+      <a href="index.html#contact">تواصل</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الليلي">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-title">
+    <div class="wrap">
+      <p class="eyebrow">مذكرات وأوراق عمل</p>
+      <h1>كل المذكرات</h1>
+      <p class="lede" style="margin-top:1rem;">ملازم ومراجعات جاهزة للتحميل والطباعة.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div id="noteGrid" class="note-grid"></div>
+      <div id="emptyState" class="empty-state" style="display:none;">لسه مفيش مذكرات — تابعنا، أول واحدة جاية قريب.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="brand" style="text-decoration:none;">
+      <span class="mark" aria-hidden="true" style="--size:28px;"></span>
+      <span class="brand-text">
+        <b style="font-size:1rem;">الخوارزميات</b>
+        <span>مهندس كهرباء ومدرس رياضيات</span>
+      </span>
+    </div>
+    <p class="fine">© 2026 الخوارزميات — جميع الحقوق محفوظة · <a href="admin.html" style="color:inherit; opacity:.6;">المطور</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var stored = localStorage.getItem('khw-theme');
+    if(stored){ root.setAttribute('data-theme', stored); }
+    var btn = document.getElementById('themeToggle');
+    function current(){
+      var attr = root.getAttribute('data-theme');
+      if(attr) return attr;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    btn.addEventListener('click', function(){
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('khw-theme', next);
+    });
+  })();
+</script>
+
+<script type="module">
+  var firebaseConfig = {
+    apiKey: "AIzaSyCrbVT7Su6avgD0QeFIGXaNm1lG1RROtIA",
+    authDomain: "al-gorthim-draz.firebaseapp.com",
+    projectId: "al-gorthim-draz",
+    storageBucket: "al-gorthim-draz.firebasestorage.app",
+    messagingSenderId: "437759985918",
+    appId: "1:437759985918:web:7eebe8de3da9edd44dbdaf"
+  };
+
+  (async function(){
+    var grid = document.getElementById('noteGrid');
+    var empty = document.getElementById('emptyState');
+    try{
+      var appMod = await import("https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js");
+      var fsMod = await import("https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js");
+      var app = appMod.initializeApp(firebaseConfig);
+      var db = fsMod.getFirestore(app);
+      var q = fsMod.query(fsMod.collection(db, "notes"), fsMod.orderBy("createdAt", "desc"));
+      var snap = await fsMod.getDocs(q);
+      if(snap.empty){ empty.style.display = 'block'; return; }
+      snap.forEach(function(docSnap){
+        var n = docSnap.data();
+        var card = document.createElement('div');
+        card.className = 'note-card';
+        card.innerHTML =
+          '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2.5h9l4 4v15H6z"/><path d="M15 2.5v4h4M9 12h6M9 15.5h6M9 8.5h3"/></svg>' +
+          '<h3></h3><p></p>' +
+          '<a class="note-dl" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>تحميل PDF</a>';
+        card.querySelector('h3').textContent = n.title || '';
+        card.querySelector('p').textContent = n.description || '';
+        var link = card.querySelector('.note-dl');
+        link.href = n.fileData || '#';
+        link.setAttribute('download', (n.title || 'note') + '.pdf');
+        grid.appendChild(card);
+      });
+    }catch(err){
+      console.warn('تعذّر تحميل المذكرات', err);
+      empty.textContent = 'تعذّر تحميل المذكرات دلوقتي.';
+      empty.style.display = 'block';
+    }
+  })();
+</script>
+</body>
+</html>

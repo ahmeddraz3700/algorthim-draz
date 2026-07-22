@@ -122,6 +122,36 @@
     padding:1rem 1.5rem; display:flex; align-items:center; gap:1rem; justify-content:flex-end;
   }
   .save-bar .status{ font-size:.85rem; color:var(--muted); margin-inline-end:auto; }
+
+  /* ---- tabs ---- */
+  .tab-bar{ display:flex; gap:.5rem; margin-bottom:1.5rem; border-bottom:1px solid var(--line); }
+  .tab-btn{
+    padding:.7rem 1.1rem; border:none; background:none; color:var(--muted);
+    font-size:.9rem; font-weight:600; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active{ color:var(--brass-strong); border-bottom-color:var(--brass); }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ---- item list (videos/articles) ---- */
+  .item-row{
+    display:flex; align-items:center; gap:.8rem; padding:.8rem; border:1px solid var(--line);
+    border-radius:8px; margin-bottom:.6rem; background:var(--surface-2);
+  }
+  .item-row .item-title{ flex:1; font-size:.9rem; font-weight:600; }
+  .item-row .item-sub{ font-size:.78rem; color:var(--muted); }
+  .item-row button{
+    padding:.4rem .8rem; border-radius:6px; border:1px solid var(--line);
+    background:var(--surface); font-size:.78rem; font-weight:600; color:var(--ink);
+  }
+  .item-row button.danger{ color:var(--danger); }
+  .form-actions{ display:flex; gap:.6rem; margin-top:.8rem; }
+  .form-actions button{
+    padding:.6rem 1.2rem; border-radius:8px; border:none; font-size:.88rem; font-weight:600;
+    background:var(--brass); color:#221802;
+  }
+  .form-actions button.cancel{ background:var(--surface-2); color:var(--ink); border:1px solid var(--line); }
+  .cover-preview{ width:110px; height:74px; object-fit:cover; border-radius:6px; border:1px solid var(--line); background:var(--surface-2); }
 </style>
 </head>
 <body>
@@ -156,6 +186,14 @@
 
   <main class="wrap">
 
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="panelHome" type="button">الصفحة الرئيسية</button>
+      <button class="tab-btn" data-tab="panelVideos" type="button">الفيديوهات</button>
+      <button class="tab-btn" data-tab="panelNotes" type="button">المذكرات</button>
+    </div>
+
+    <div id="panelHome" class="panel active">
+
     <div class="section-card">
       <h2>الصورة الرئيسية</h2>
       <div class="img-row">
@@ -177,7 +215,7 @@
     </div>
 
     <div class="section-card">
-      <h2>عن المستر</h2>
+      <h2>عن البشمهندس</h2>
       <div class="field"><label>الوظيفة (تحت الاسم)</label><input data-field="aboutRole" /></div>
       <div class="field"><label>العبارة الصغيرة</label><input data-field="aboutEyebrow" /></div>
       <div class="field"><label>العنوان</label><textarea data-field="aboutTitle"></textarea></div>
@@ -213,23 +251,62 @@
     </div>
 
     <div class="section-card">
-      <h2>أحدث المحتوى</h2>
-      <div class="field"><label>عنوان القسم</label><input data-field="latestTitle" /></div>
-      <div class="field"><label>الملاحظة تحت العنوان</label><textarea data-field="latestNote"></textarea></div>
-      <div class="field"><label>وصف كارت الفيديو</label><textarea data-field="latestVideoDesc"></textarea></div>
-      <div class="field"><label>وصف كارت المذكرة</label><textarea data-field="latestPdfDesc"></textarea></div>
-      <div class="field"><label>وصف كارت المقال</label><textarea data-field="latestArticleDesc"></textarea></div>
-    </div>
-
-    <div class="section-card">
       <h2>تواصل</h2>
       <div class="field"><label>العنوان</label><input data-field="contactTitle" /></div>
       <div class="field"><label>الفقرة</label><textarea data-field="contactBody"></textarea></div>
     </div>
 
+    </div>
+
+    <div id="panelVideos" class="panel">
+      <div class="section-card">
+        <h2 id="videoFormTitle">إضافة فيديو جديد</h2>
+        <div class="field"><label>عنوان الفيديو</label><input id="videoTitle" /></div>
+        <div class="field"><label>رابط اليوتيوب</label><input id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." /></div>
+        <div class="field"><label>وصف قصير</label><textarea id="videoDesc"></textarea></div>
+        <div class="form-actions">
+          <button id="videoSaveBtn" type="button">إضافة الفيديو</button>
+          <button id="videoCancelBtn" type="button" class="cancel" style="display:none;">إلغاء التعديل</button>
+        </div>
+        <div id="videoFormStatus" style="font-size:.82rem;color:var(--muted);margin-top:.6rem;"></div>
+      </div>
+      <div class="section-card">
+        <h2>الفيديوهات المنشورة</h2>
+        <div id="videoList"></div>
+      </div>
+    </div>
+
+    <div id="panelNotes" class="panel">
+      <div class="section-card">
+        <h2 id="noteFormTitle">إضافة مذكرة جديدة</h2>
+        <div class="field"><label>عنوان المذكرة</label><input id="noteTitle" /></div>
+        <div class="field"><label>وصف قصير</label><textarea id="noteDesc"></textarea></div>
+        <div class="field">
+          <label>ملف PDF (بحد أقصى حوالي 650 كيلوبايت)</label>
+          <div class="img-row">
+            <label class="file-btn">
+              اختيار ملف PDF
+              <input id="notePdfInput" type="file" accept="application/pdf" style="display:none" />
+            </label>
+            <span id="notePdfName" style="font-size:.82rem;color:var(--muted);"></span>
+          </div>
+          <p style="font-size:.78rem;color:var(--muted);margin-top:.5rem;">لو الملف كبير، جرب تصغّره بأداة ضغط PDF مجانية أونلاين قبل ما ترفعه.</p>
+        </div>
+        <div class="form-actions">
+          <button id="noteSaveBtn" type="button">إضافة المذكرة</button>
+          <button id="noteCancelBtn" type="button" class="cancel" style="display:none;">إلغاء التعديل</button>
+        </div>
+        <div id="noteFormStatus" style="font-size:.82rem;color:var(--muted);margin-top:.6rem;"></div>
+      </div>
+      <div class="section-card">
+        <h2>المذكرات المنشورة</h2>
+        <div id="noteList"></div>
+      </div>
+    </div>
+
   </main>
 
-  <div class="save-bar">
+  <div class="save-bar" id="homeSaveBar">
     <span class="status" id="saveStatus"></span>
     <button class="btn primary" id="saveBtn" type="button">حفظ التغييرات</button>
   </div>
@@ -271,11 +348,6 @@
     ew2Body: "فايدة، ونسبة خصم، وقرار شراء — كلها قرارات بتاخدها بالحساب من غير ما تحس.",
     ew3Title: "الطبيعة والأنماط",
     ew3Body: "تماثل، وتكرار، وأشكال هندسية موجودة في كل حاجة حواليك — من ورقة الشجر للخلية النحل.",
-    latestTitle: "المحتوى في الطريق",
-    latestNote: "أول دفعة فيديوهات ومذكرات هتتنزل هنا قريبًا. تابعنا عشان توصلك أول ما تطلع.",
-    latestVideoDesc: "أول فيديو هيربط بين درس من المنهج ومثال من حياتنا اليومية.",
-    latestPdfDesc: "مذكرة مراجعة أول باب، جاهزة للتحميل والطباعة.",
-    latestArticleDesc: "مقال قصير عن استخدام عملي للرياضيات في مجال الهندسة.",
     contactTitle: "تابعنا عشان يوصلك كل جديد",
     contactBody: "قنوات المتابعة والتواصل هتتحدّث هنا أول ما تكون جاهزة."
   };
@@ -403,6 +475,213 @@
         saveStatus.textContent = "تم الحفظ — التغييرات ظاهرة على الموقع دلوقتي.";
       }catch(err){
         saveStatus.textContent = "حصل خطأ أثناء الحفظ. حاول تاني.";
+      }
+    });
+
+    // ---- tabs ----
+    var homeSaveBar = document.getElementById('homeSaveBar');
+    document.querySelectorAll('.tab-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+        btn.classList.add('active');
+        var panelId = btn.getAttribute('data-tab');
+        document.getElementById(panelId).classList.add('active');
+        homeSaveBar.style.display = (panelId === 'panelHome') ? 'flex' : 'none';
+        if(panelId === 'panelVideos') loadVideos();
+        if(panelId === 'panelNotes') loadNotes();
+      });
+    });
+
+    // ---- videos CRUD ----
+    var editingVideoId = null;
+    async function loadVideos(){
+      var list = document.getElementById('videoList');
+      list.textContent = 'جاري التحميل...';
+      try{
+        var q = fsMod.query(fsMod.collection(db, "videos"), fsMod.orderBy("createdAt", "desc"));
+        var snap = await fsMod.getDocs(q);
+        list.innerHTML = '';
+        if(snap.empty){ list.textContent = 'مفيش فيديوهات لسه.'; return; }
+        snap.forEach(function(docSnap){
+          var v = docSnap.data();
+          var row = document.createElement('div');
+          row.className = 'item-row';
+          row.innerHTML =
+            '<div><div class="item-title"></div><div class="item-sub"></div></div>'.replace('<div><div', '<div style="flex:1"><div');
+          row.querySelector('.item-title').textContent = v.title || '(بدون عنوان)';
+          row.querySelector('.item-sub').textContent = v.url || '';
+          var editBtn = document.createElement('button');
+          editBtn.type = 'button'; editBtn.textContent = 'تعديل';
+          editBtn.addEventListener('click', function(){
+            editingVideoId = docSnap.id;
+            document.getElementById('videoTitle').value = v.title || '';
+            document.getElementById('videoUrl').value = v.url || '';
+            document.getElementById('videoDesc').value = v.description || '';
+            document.getElementById('videoFormTitle').textContent = 'تعديل الفيديو';
+            document.getElementById('videoSaveBtn').textContent = 'حفظ التعديل';
+            document.getElementById('videoCancelBtn').style.display = 'inline-flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+          var delBtn = document.createElement('button');
+          delBtn.type = 'button'; delBtn.textContent = 'حذف'; delBtn.className = 'danger';
+          delBtn.addEventListener('click', async function(){
+            if(!confirm('متأكد إنك عايز تمسح الفيديو ده؟')) return;
+            await fsMod.deleteDoc(fsMod.doc(db, "videos", docSnap.id));
+            loadVideos();
+          });
+          row.appendChild(editBtn);
+          row.appendChild(delBtn);
+          list.appendChild(row);
+        });
+      }catch(err){
+        list.textContent = 'تعذّر تحميل الفيديوهات.';
+      }
+    }
+
+    function resetVideoForm(){
+      editingVideoId = null;
+      document.getElementById('videoTitle').value = '';
+      document.getElementById('videoUrl').value = '';
+      document.getElementById('videoDesc').value = '';
+      document.getElementById('videoFormTitle').textContent = 'إضافة فيديو جديد';
+      document.getElementById('videoSaveBtn').textContent = 'إضافة الفيديو';
+      document.getElementById('videoCancelBtn').style.display = 'none';
+    }
+
+    document.getElementById('videoCancelBtn').addEventListener('click', resetVideoForm);
+
+    document.getElementById('videoSaveBtn').addEventListener('click', async function(){
+      var status = document.getElementById('videoFormStatus');
+      var title = document.getElementById('videoTitle').value.trim();
+      var url = document.getElementById('videoUrl').value.trim();
+      var description = document.getElementById('videoDesc').value.trim();
+      if(!title || !url){ status.textContent = 'لازم تكتب عنوان ورابط يوتيوب.'; return; }
+      status.textContent = 'جاري الحفظ...';
+      try{
+        if(editingVideoId){
+          await fsMod.updateDoc(fsMod.doc(db, "videos", editingVideoId), { title: title, url: url, description: description });
+        } else {
+          await fsMod.addDoc(fsMod.collection(db, "videos"), { title: title, url: url, description: description, createdAt: fsMod.serverTimestamp() });
+        }
+        status.textContent = 'تم الحفظ.';
+        resetVideoForm();
+        loadVideos();
+      }catch(err){
+        status.textContent = 'حصل خطأ أثناء الحفظ.';
+      }
+    });
+
+    // ---- notes (PDF) CRUD ----
+    var editingNoteId = null;
+    var pendingNoteFile = null; // { dataUrl, name }
+    var MAX_PDF_BYTES = 650 * 1024;
+
+    function fileToDataURL(file){
+      return new Promise(function(resolve, reject){
+        var reader = new FileReader();
+        reader.onerror = function(){ reject(new Error('read failed')); };
+        reader.onload = function(e){ resolve(e.target.result); };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function loadNotes(){
+      var list = document.getElementById('noteList');
+      list.textContent = 'جاري التحميل...';
+      try{
+        var q = fsMod.query(fsMod.collection(db, "notes"), fsMod.orderBy("createdAt", "desc"));
+        var snap = await fsMod.getDocs(q);
+        list.innerHTML = '';
+        if(snap.empty){ list.textContent = 'مفيش مذكرات لسه.'; return; }
+        snap.forEach(function(docSnap){
+          var n = docSnap.data();
+          var row = document.createElement('div');
+          row.className = 'item-row';
+          row.innerHTML = '<div style="flex:1"><div class="item-title"></div><div class="item-sub"></div></div>';
+          row.querySelector('.item-title').textContent = n.title || '(بدون عنوان)';
+          row.querySelector('.item-sub').textContent = n.fileName || '';
+          var editBtn = document.createElement('button');
+          editBtn.type = 'button'; editBtn.textContent = 'تعديل';
+          editBtn.addEventListener('click', function(){
+            editingNoteId = docSnap.id;
+            document.getElementById('noteTitle').value = n.title || '';
+            document.getElementById('noteDesc').value = n.description || '';
+            pendingNoteFile = n.fileData ? { dataUrl: n.fileData, name: n.fileName } : null;
+            document.getElementById('notePdfName').textContent = n.fileName || '';
+            document.getElementById('noteFormTitle').textContent = 'تعديل المذكرة';
+            document.getElementById('noteSaveBtn').textContent = 'حفظ التعديل';
+            document.getElementById('noteCancelBtn').style.display = 'inline-flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+          var delBtn = document.createElement('button');
+          delBtn.type = 'button'; delBtn.textContent = 'حذف'; delBtn.className = 'danger';
+          delBtn.addEventListener('click', async function(){
+            if(!confirm('متأكد إنك عايز تمسح المذكرة دي؟')) return;
+            await fsMod.deleteDoc(fsMod.doc(db, "notes", docSnap.id));
+            loadNotes();
+          });
+          row.appendChild(editBtn);
+          row.appendChild(delBtn);
+          list.appendChild(row);
+        });
+      }catch(err){
+        list.textContent = 'تعذّر تحميل المذكرات.';
+      }
+    }
+
+    function resetNoteForm(){
+      editingNoteId = null;
+      pendingNoteFile = null;
+      document.getElementById('noteTitle').value = '';
+      document.getElementById('noteDesc').value = '';
+      document.getElementById('notePdfName').textContent = '';
+      document.getElementById('noteFormTitle').textContent = 'إضافة مذكرة جديدة';
+      document.getElementById('noteSaveBtn').textContent = 'إضافة المذكرة';
+      document.getElementById('noteCancelBtn').style.display = 'none';
+    }
+
+    document.getElementById('noteCancelBtn').addEventListener('click', resetNoteForm);
+
+    document.getElementById('notePdfInput').addEventListener('change', async function(e){
+      var file = e.target.files[0];
+      if(!file) return;
+      var status = document.getElementById('noteFormStatus');
+      if(file.size > MAX_PDF_BYTES){
+        status.textContent = 'الملف كبير أوي (' + Math.round(file.size/1024) + ' كيلوبايت). الحد الأقصى حوالي 650 كيلوبايت — جرب تصغّره.';
+        e.target.value = '';
+        return;
+      }
+      status.textContent = '';
+      try{
+        var dataUrl = await fileToDataURL(file);
+        pendingNoteFile = { dataUrl: dataUrl, name: file.name };
+        document.getElementById('notePdfName').textContent = file.name + ' (' + Math.round(file.size/1024) + ' ك.ب)';
+      }catch(err){
+        status.textContent = 'تعذّر قراءة الملف.';
+      }
+    });
+
+    document.getElementById('noteSaveBtn').addEventListener('click', async function(){
+      var status = document.getElementById('noteFormStatus');
+      var title = document.getElementById('noteTitle').value.trim();
+      var description = document.getElementById('noteDesc').value.trim();
+      if(!title){ status.textContent = 'لازم تكتب عنوان.'; return; }
+      if(!pendingNoteFile){ status.textContent = 'لازم تختار ملف PDF.'; return; }
+      status.textContent = 'جاري الحفظ...';
+      try{
+        var payload = { title: title, description: description, fileData: pendingNoteFile.dataUrl, fileName: pendingNoteFile.name };
+        if(editingNoteId){
+          await fsMod.updateDoc(fsMod.doc(db, "notes", editingNoteId), payload);
+        } else {
+          payload.createdAt = fsMod.serverTimestamp();
+          await fsMod.addDoc(fsMod.collection(db, "notes"), payload);
+        }
+        status.textContent = 'تم الحفظ.';
+        resetNoteForm();
+        loadNotes();
+      }catch(err){
+        status.textContent = 'حصل خطأ أثناء الحفظ.';
       }
     });
   }
